@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="jp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatSystem</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
+    <script>
+        // サーバーへのWebSocket接続
+    const socket = io();
+
+    // 入室時の処理
+    socket.emit('joinRoom', 'ユーザー名');
+
+    // メッセージ送信処理
+    function sendMessage() {
+        const message = document.getElementById('message').value;
+        socket.emit('chatMessage', { userName: 'ユーザー名', message: message });
+        document.getElementById('message').value = '';
+    }
+
+    // メッセージ受信処理
+    socket.on('message', (data) => {
+        const messageContainer = document.getElementById('messages');
+        const messageElement = document.createElement('li');
+        messageElement.innerText = data;
+        messageContainer.appendChild(messageElement);
+    });
+
+    // 退室時の処理
+    window.addEventListener('beforeunload', function() {
+    socket.emit('leaveRoom', 'ユーザー名');
+    });
+</script>
+</head>
+<body>
+    <h1>Chat Room</h1>
+    <ul id="messages"></ul>
+    <input type="text" id="message" placeholder="メッセージを入力">
+    <button onclick="sendMessage()">送信</button>
+</body>
+</html>
