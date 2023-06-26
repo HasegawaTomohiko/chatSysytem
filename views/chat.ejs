@@ -4,10 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChatSystem</title>
+    
+</head>
+<body>
+    <h1>Chat Room <%= roomId ? `- Room ${roomId}` : '' %></h1>
+    <ul id="messages"></ul>
+    <input type="text" id="message" placeholder="メッセージを入力">
+    <button onclick="sendMessage()">送信</button>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
     <script>
         // サーバーへのWebSocket接続
-    const socket = io();
+
+    const roomId = '<%= roomId %>'
+    const socket = io(`/${roomId}/socket.io`);
 
     // 入室時の処理
     socket.emit('joinRoom', 'ユーザー名');
@@ -32,11 +41,5 @@
     socket.emit('leaveRoom', 'ユーザー名');
     });
 </script>
-</head>
-<body>
-    <h1>Chat Room</h1>
-    <ul id="messages"></ul>
-    <input type="text" id="message" placeholder="メッセージを入力">
-    <button onclick="sendMessage()">送信</button>
 </body>
 </html>
