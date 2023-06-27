@@ -3,14 +3,12 @@ var http = require('http');
 var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
-var io = require('socket.io'); // 追加
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var socketio = require('socket.io');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-
 var chatRouter  = require('./routes/chat');
 
 var app = express();
