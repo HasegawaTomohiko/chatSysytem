@@ -1,45 +1,45 @@
 <!DOCTYPE html>
 <html lang="jp">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ChatSystem</title>
-    
-</head>
-<body>
-    <h1>Chat Room <%= roomId ? `- Room ${roomId}` : '' %></h1>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+  </head>
+  <body>
+    <h1>Chat Room <%= room %></h1>
+    <input type="text" id="message" placeholder="メッセージを入力" />
+    <button>送信</button>
     <ul id="messages"></ul>
-    <input type="text" id="message" placeholder="メッセージを入力">
-    <button onclick="sendMessage()">送信</button>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
     <script>
-        // サーバーへのWebSocket接続
+        var socket = io.connect(); // C02. ソケットへの接続
+        var name = 'ユーザ名';
+        var selectRoom = "<%= room %>";
+        var entryMessage = name + 'さんが入室しました。';
 
-    const roomId = '<%= roomId %>'
-    const socket = io(`/${roomId}/socket.io`);
 
-    // 入室時の処理
-    socket.emit('joinRoom', 'ユーザー名');
+        socket.emit('client_to_server_join', { value: selectRoom });
+        socket.emit('client_to_server_broadcast', { value: entryMessage });
+        socket.emit('client_to_server_personal', { value: name });
+        // C04. server_to_clientイベント・データを受信する
+        socket.on('server_to_client', function (data) {
+            appendMsg(data.value);
+        });
+        function appendMsg(text) {
+            $('#messages').append('<li>' + text + '</li>');
+        }
 
-    // メッセージ送信処理
-    function sendMessage() {
-        const message = document.getElementById('message').value;
-        socket.emit('chatMessage', { userName: 'ユーザー名', message: message });
-        document.getElementById('message').value = '';
-    }
 
-    // メッセージ受信処理
-    socket.on('message', (data) => {
-        const messageContainer = document.getElementById('messages');
-        const messageElement = document.createElement('li');
-        messageElement.innerText = data;
-        messageContainer.appendChild(messageElement);
-    });
+        $('button').click(function (e) {
+            var message = $('#message').val();
+            $('#message').val('');
+            message = '[' + name + ']: ' + message;
+            // C03. client_to_serverイベント・データを送信する
+            socket.emit('client_to_server', { value: message });
+        });
+    </script>
+  </body>
 
-    // 退室時の処理
-    window.addEventListener('beforeunload', function() {
-    socket.emit('leaveRoom', 'ユーザー名');
-    });
-</script>
-</body>
 </html>

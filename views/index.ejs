@@ -8,11 +8,14 @@
     <h1>ChatSystem</h1>
     <h2>Room List</h2>
 
+    <!-- ログイン/新規ユーザー作成 -->
+
     <h2></h2>
     <ul>
       <% roomList.forEach(room => { %>
         <li>
-          <a href="/chat/<%= room.roomId %>">
+          <% console.log(room.roomID); %>
+          <a href="/chat?id=<%= room.roomID %>">
             <%= room.title %>
           </a>
         </li>
