@@ -4,7 +4,8 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+var app = require('../app').app;
+var server = require('../app').server;
 var debug = require('debug')('chat-room:server');
 var http = require('http');
 
@@ -19,7 +20,7 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+// var server = http.createServer(app); // この行はコメントアウトまたは削除します
 
 /**
  * Listen on provided port, on all network interfaces.

@@ -1,36 +1,51 @@
 const express = require('express');
-var io = require('socket.io');
-const body    = require('body-parser');
-const {v4 : uuidv4} = require('uuid');
+const { v4: uuidv4 } = require('uuid');
 const router = express.Router();
-const app = express();
 
-router.get('/', (req,res) => {
-    res.render('chat');
+router.get('/', (req, res) => {
+  var roomId = req.query.id;
+  res.render('chat', { room: roomId });
 });
 
-router.get('/:roomID', (req,res) => {
-    const roomId = req.params.roomID;
+module.exports = (io) => {
 
-    res.render('chat', {roomId: roomId});
+  io.on('connection', function (socket) {
+    var room = '';
+    var name = '';
 
-    io.on('connection',(socket) => {
-        socket.on('joinRoom', (userName) => {
-            io.to(roomId).emit('message', `${userName}が入室しました`);
-        });
-
-        socket.on('chatMessage', (data) => {
-            const {userName,message} = data;
-
-            io.to(roomId).emit('message', `${userName} : ${message}`);
-        });
-
-        socket.on('leaveRoom', (userName) => {
-            io.to(roomId).emit('message', `${userName}が退出しました`);
-        });
+    socket.on('client_to_server_join', function (data) {
+      room = data.value;
+      socket.join(room);
+      console.log(data.value + ' :join');
     });
-});
 
-app.use(body.json());
+    socket.on('client_to_server', function (data) {
+      io.to(room).emit('server_to_client', { value: data.value });
+      console.log(data.value + ' :send');
+    });
 
-module.exports = router;
+    socket.on('client_to_server_broadcast', function (data) {
+      socket.broadcast.to(room).emit('server_to_client', { value: data.value });
+      console.log(data.value + ' :send');
+    });
+
+    socket.on('client_to_server_personal', function (data) {
+      var id = socket.id;
+      name = data.value;
+      var personalMessage = 'あなたは、' + name + 'さんとして入室しました。';
+      console.log(name + ' join');
+      io.to(id).emit('server_to_client', { value: personalMessage });
+    });
+
+    socket.on('disconnect', function () {
+      if (name === '') {
+        console.log('未入室のまま、どこかへ去っていきました。');
+      } else {
+        var endMessage = name + 'さんが退出しました。';
+        io.to(room).emit('server_to_client', { value: endMessage });
+      }
+    });
+  });
+
+  return router;
+};
