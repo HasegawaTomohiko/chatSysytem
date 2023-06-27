@@ -19,6 +19,7 @@
         var selectRoom = "<%= room %>";
         var entryMessage = name + 'さんが入室しました。';
 
+
         socket.emit('client_to_server_join', { value: selectRoom });
         socket.emit('client_to_server_broadcast', { value: entryMessage });
         socket.emit('client_to_server_personal', { value: name });
@@ -30,6 +31,7 @@
             $('#messages').append('<li>' + text + '</li>');
         }
 
+
         $('button').click(function (e) {
             var message = $('#message').val();
             $('#message').val('');
@@ -39,4 +41,5 @@
         });
     </script>
   </body>
+
 </html>
