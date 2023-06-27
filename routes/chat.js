@@ -3,9 +3,8 @@ const { v4: uuidv4 } = require('uuid');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-
   var roomId = req.query.id;
-  res.render('chat', { room: roomId });
+  res.render('chat', {room: roomId});
 });
 
 module.exports = (io) => {
