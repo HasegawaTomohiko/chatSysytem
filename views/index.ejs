@@ -9,8 +9,25 @@
     <h2>Room List</h2>
 
     <!-- ログイン/新規ユーザー作成 -->
-
+    <!-- Cookieがある場合 -->
     <h2></h2>
+    <form action="/createChatRoom" method="post" id="createChatRoom">
+      <input type="text" name="roomName" id="roomName">
+      <input type="submit" value="ルーム作成">
+    </form>
+    <!--ここまで-->
+
+    <!-- Cookieがない場合-->
+    <form action="/createUser" method="post" id="createUser">
+      <input type="text" name="userID" id="userID">
+      <input type="text" name="userName" id="userName">
+      <input type="submit" value="ユーザ登録">
+    </form>
+    <form action="/loginUser" method="post" id="loginUser">
+      <input type="text" name="userID" id="userID">
+      <input type="submit" value="ログイン">
+    </form>
+    <!-- ここまで -->
     <ul>
       <% roomList.forEach(room => { %>
         <li>
