@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
+
 const rooms = [
   {id: 1, title: 'Room1'},
   {id: 2, title: 'ikisugi'},
@@ -41,6 +42,11 @@ router.get('/chat/:roomID', (req,res) => {
           io.to(roomId).emit('message', `${userName}が退出しました`);
       });
   });
+});
+
+router.get("/api", (req, res) => {
+  res.json({message: '接続したよ！お兄ちゃん！'});
+  console.log("接続終了(正常)");
 });
 
 module.exports = router;
