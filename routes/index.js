@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var sqlite = require('sqlite3');
 
+
 const db = new sqlite.Database('chatSystem.sqlite3');
 
 const rooms = [];
@@ -62,6 +63,11 @@ router.post('/loginUser', (req,res,next) => {
       res.render('index', {roomList:roomList});
     });
   });
+});
+
+router.get("/api", (req, res) => {
+  res.json({message: '接続したよ！お兄ちゃん！'});
+  console.log("接続終了(正常)");
 });
 
 module.exports = router;

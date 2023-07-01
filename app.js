@@ -26,7 +26,21 @@ const io = new Server()
 
 var app = express();
 var server = http.createServer(app);
+
+var io = socketio(server);
+const cors =require('cors');
+
+const corsOptions = {
+  origin: 'http://localhost:3000', // 許可したいオリジンを指定
+  credentials: true, // レスポンスヘッダーにAccess-Control-Allow-Credentialsを追加。ユーザー認証等を行う場合は、これがないとブラウザがレスポンスを捨ててしまうそう。
+  optionsSuccessStatus: 200 // レスポンスのHTTPステータスコードを「200(成功)」に設定
+}
+
+// app.use(cors(corsOptions));
+app.use(cors());
+
 const iod = socketio(server);
+
 
 
 // view engine setup
@@ -57,6 +71,5 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
 
 module.exports = {app,server};
