@@ -23,8 +23,9 @@ router.post('/createChatRoom', (req,res,next) => {
   rooms.push({
     id: rooms.length + 1,
     title: roomName,
-  })
-  res.redirect('/'); //これで動くかどうか試してみてほしい
+
+  });
+  res.redirect('/');
   /* const roomList = rooms.map(room => ({
     roomID : room.id,
     title: room.title
@@ -41,7 +42,7 @@ router.post('/createUser', (req,res,next) => {
       console.error(err);
     });
   });
-  res.redirect('/'); //同じく
+  res.redirect('/');
   /* const roomList = rooms.map(room => ({
     roomID : room.id,
     title: room.title
@@ -59,11 +60,12 @@ router.post('/loginUser', (req,res,next) => {
         res.cookie('userID',row.userID,{httpOnly:false});
         console.log('クッキーしました。');
       }
-      const roomList = rooms.map(room => ({
+      res.redirect('/');
+      /* const roomList = rooms.map(room => ({
       roomID : room.id,
       title : room.title
       }));
-      res.render('index', {roomList:roomList});
+      res.render('index', {roomList:roomList}); */
     });
   });
 });
