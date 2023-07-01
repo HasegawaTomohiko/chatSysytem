@@ -19,7 +19,7 @@
         var selectRoom = "<%= room %>";
         var entryMessage = name + 'さんが入室しました。';
         socket.emit('client_to_server_join', { value: selectRoom });
-        socket.emit('client_to_server_broadcast', { value: entryMessage });
+        socket.emit('client_to_server', { value: entryMessage });
         socket.emit('client_to_server_personal', { value: name });
         // C04. server_to_clientイベント・データを受信する
         socket.on('server_to_client', function (data) {
@@ -48,6 +48,7 @@
           }
           return '';
         }
+
     </script>
   </body>
 

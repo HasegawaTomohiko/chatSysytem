@@ -25,9 +25,9 @@ module.exports = (io) => {
     });
 
     socket.on('client_to_server_broadcast', function (data) {
-      socket.broadcast.to(room).emit('server_to_client', { value: data.value });
+      socket.broadcast.emit('server_to_client', { value: data.value });
       console.log(data.value + ' :send');
-    });
+    });// socket.broadcast.to(room) = io.to(room)
 
     socket.on('client_to_server_personal', function (data) {
       var id = socket.id;
@@ -35,15 +35,6 @@ module.exports = (io) => {
       var personalMessage = 'あなたは、' + name + 'さんとして入室しました。';
       console.log(name + ' join');
       io.to(id).emit('server_to_client', { value: personalMessage });
-    });
-
-    socket.on('disconnect', function () {
-      if (name === '') {
-        console.log('未入室のまま、どこかへ去っていきました。');
-      } else {
-        var endMessage = name + 'さんが退出しました。';
-        io.to(room).emit('server_to_client', { value: endMessage });
-      }
     });
   });
 
