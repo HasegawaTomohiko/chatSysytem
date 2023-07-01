@@ -7,7 +7,6 @@ var logger = require('morgan');
 var socketio = require('socket.io');
 var indexRouter = require('./routes/index');
 var chatRouter  = require('./routes/chat');
-
 /*
 import createError from 'http-errors';
 import { createServer } from 'http';

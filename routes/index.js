@@ -14,6 +14,7 @@ router.get('/', function(req, res, next) {
     title: room.title
   }));
   res.render('index', {roomList: roomList});
+  //res.json({roomList: roomList});
 });
 
 //ルーム作成機能
@@ -23,11 +24,12 @@ router.post('/createChatRoom', (req,res,next) => {
     id: rooms.length + 1,
     title: roomName,
   })
-  const roomList = rooms.map(room => ({
+  res.redirect('/'); //これで動くかどうか試してみてほしい
+  /* const roomList = rooms.map(room => ({
     roomID : room.id,
     title: room.title
   }));
-  res.render('index', {roomList: roomList});
+  res.render('index', {roomList: roomList}); */
 });
 
 router.post('/createUser', (req,res,next) => {
@@ -39,11 +41,12 @@ router.post('/createUser', (req,res,next) => {
       console.error(err);
     });
   });
-  const roomList = rooms.map(room => ({
+  res.redirect('/'); //同じく
+  /* const roomList = rooms.map(room => ({
     roomID : room.id,
     title: room.title
   }));
-  res.render('index', {roomList: roomList});
+  res.render('index', {roomList: roomList}); */
 });
 
 router.post('/loginUser', (req,res,next) => {
