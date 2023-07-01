@@ -22,12 +22,13 @@ router.post('/createChatRoom', (req,res,next) => {
   rooms.push({
     id: rooms.length + 1,
     title: roomName,
-  })
-  const roomList = rooms.map(room => ({
+  });
+  res.redirect('/');
+  /* const roomList = rooms.map(room => ({
     roomID : room.id,
     title: room.title
   }));
-  res.render('index', {roomList: roomList});
+  res.render('index', {roomList: roomList}); */
 });
 
 router.post('/createUser', (req,res,next) => {
@@ -39,11 +40,12 @@ router.post('/createUser', (req,res,next) => {
       console.error(err);
     });
   });
-  const roomList = rooms.map(room => ({
+  res.redirect('/');
+  /* const roomList = rooms.map(room => ({
     roomID : room.id,
     title: room.title
   }));
-  res.render('index', {roomList: roomList});
+  res.render('index', {roomList: roomList}); */
 });
 
 router.post('/loginUser', (req,res,next) => {
@@ -56,11 +58,12 @@ router.post('/loginUser', (req,res,next) => {
         res.cookie('userID',row.userID,{httpOnly:false});
         console.log('クッキーしました。');
       }
-      const roomList = rooms.map(room => ({
+      res.redirect('/');
+      /* const roomList = rooms.map(room => ({
       roomID : room.id,
       title : room.title
       }));
-      res.render('index', {roomList:roomList});
+      res.render('index', {roomList:roomList}); */
     });
   });
 });
