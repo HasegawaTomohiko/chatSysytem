@@ -3,6 +3,7 @@
   <head>
     <title>ChatSystem</title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
   </head>
   <body>
     <h1>ChatSystem</h1>
@@ -10,33 +11,102 @@
 
     <!-- ログイン/新規ユーザー作成 -->
     <!-- Cookieがある場合 -->
-    <h2></h2>
-    <form action="/createChatRoom" method="post" id="createChatRoom">
-      <input type="text" name="roomName" id="roomName">
-      <input type="submit" value="ルーム作成">
-    </form>
+
+    <div class="container" id="roomForm">
+      <h2>ルーム作成</h2>
+      <form action="/createChatRoom" method="post" id="createChatRoom">
+        <input type="text" name="roomName" id="roomName" class="form-control">
+        <input type="submit" value="ルーム作成" class="btn btn-primary">
+      </form>
+
+      <form action="/logout">
+        <input type="submit" value="ログアウト" class="btn btn-primary">
+      </form>
+    </div>
     <!--ここまで-->
 
     <!-- Cookieがない場合-->
-    <form action="/createUser" method="post" id="createUser">
-      <input type="text" name="userID" id="userID">
-      <input type="text" name="userName" id="userName">
-      <input type="submit" value="ユーザ登録">
-    </form>
-    <form action="/loginUser" method="post" id="loginUser">
-      <input type="text" name="userID" id="userID">
-      <input type="submit" value="ログイン">
-    </form>
-    <!-- ここまで -->
-    <ul>
-      <% roomList.forEach(room => { %>
-        <li>
-          <% console.log(room.roomID); %>
-          <a href="/chat?id=<%= room.roomID %>">
-            <%= room.title %>
-          </a>
+    <div class="container" id="userForm" >
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link active" id="login-tab" data-bs-toggle="tab" href="#login">ログイン</a>
         </li>
-      <% }); %>
-    </ul>
+        <li class="nav-item">
+          <a class="nav-link" id="register-tab" data-bs-toggle="tab" href="#register">ユーザ登録</a>
+        </li>
+      </ul>
+  
+      <div class="tab-content mt-3">
+        <div class="tab-pane fade show active" id="login">
+          <h2>ログイン</h2>
+          <form action="/loginUser" method="post" class="needs-validation" novalidate>
+            <input type="text" name="userID" id="userID" class="form-control" placeholder="ユーザID" required>
+            <input type="submit" value="ログイン" class="btn btn-primary">
+          </form>
+        </div>
+        <div class="tab-pane fade" id="register">
+          <h2>ユーザ登録</h2>
+          <form action="/createUser" method="post" class="needs-validation" novalidate>
+            <input type="text" name="userID" id="userID" class="form-control" placeholder="ユーザID" required>
+            <input type="text" name="userName" id="userName" class="form-control" placeholder="ユーザ名" required>
+            <input type="submit" value="ユーザ登録" class="btn btn-primary">
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div id="userDetail" class="display-6"></div>
+    </div>
+
+
+    <!-- ここまで -->
+    <div class="container">
+      <ul class="list-group">
+        <% roomList.forEach(room => { %>
+          <li class="list-group-item">
+            <% console.log(room.roomID); %>
+            <a href="/chat?id=<%= room.roomID %>">
+              <%= room.title %>
+            </a>
+          </li>
+        <% }); %>
+      </ul>
+    </div>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded",() => {
+        var roomForm = document.getElementById("roomForm");
+        var userForm = document.getElementById("userForm");
+        var userDetail = document.getElementById("userDetail");
+
+        var userID = getCookie("userID");
+        var userName = getCookie("userName");
+
+        if (userID) {
+          roomForm.style.display = "block";
+          userForm.style.display = "none";
+          userDetail.innerHTML = "<p>あなたは" + userName + "としてログインしています</p>";
+        } else {
+          roomForm.style.display = "none";
+          userForm.style.display = "block";
+          userDetail.innerHTML = "<p>あなたはまだログインしていません</p>";
+        }
+        function getCookie(name) {
+          var cookieArr = document.cookie.split(";");
+
+          for (var i = 0; i < cookieArr.length; i++) {
+            var cookiePair = cookieArr[i].split("=");
+
+            if (name === cookiePair[0].trim()) {
+              return decodeURIComponent(cookiePair[1]);
+            }
+          }
+
+          return null;
+        }
+      });
+
+    </script>
   </body>
 </html>

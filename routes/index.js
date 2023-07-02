@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var sqlite = require('sqlite3');
 
-
 const db = new sqlite.Database('chatSystem.sqlite3');
 
 const rooms = [];
@@ -56,6 +55,7 @@ router.post('/loginUser', (req,res,next) => {
       if(!err){
         console.log(row);
         res.cookie('userID',row.userID,{httpOnly:false});
+        res.cookie('userName',row.userName,{httpOnly:false});
         console.log('クッキーしました。');
       }
       res.redirect('/');
@@ -66,6 +66,12 @@ router.post('/loginUser', (req,res,next) => {
       res.render('index', {roomList:roomList}); */
     });
   });
+});
+
+router.get('/logout', (req,res) => {
+  res.clearCookie('userID');
+  res.clearCookie('userName');
+  res.redirect('/');
 });
 
 router.get("/api", (req, res) => {
