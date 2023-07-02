@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="jp">
   <head>
-    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <title>ChatSystem</title>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script> -->
 
@@ -11,33 +12,43 @@
   </head>
   <body>
     <h1>Chat Room <%= room %></h1>
-    <input type="text" id="message" placeholder="メッセージを入力" />
-    <button>送信</button>
-    <ul id="messages"></ul>
+    <form class="row g-3 needs-validation" novalidate>
+      
+      <input type="text" id="message" placeholder="メッセージを入力" class="form-control" required=true>
+      <div class="invalid-feedback">
+        <label>テキストを入力してください</label>
+      </div>
+      <!-- <input type="submit" value="送信" class="btn btn-primary"> -->
+      <button type="button" id="sendBtn" class="btn btn-primary">送信</button>
+    </form>
+    <div class="container">
+      <ul id="messages" class="list-group"></ul>
+    </div>
+    
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
     <script>
 
-        var socket = io.connect(); // C02. ソケットへの接続
+        var socket = io.connect();
         var name = getCookie('userID');
         var selectRoom = "<%= room %>";
         var entryMessage = name + 'さんが入室しました。';
         socket.emit('client_to_server_join', { value: selectRoom });
         socket.emit('client_to_server', { value: entryMessage });
         socket.emit('client_to_server_personal', { value: name });
-        // C04. server_to_clientイベント・データを受信する
         socket.on('server_to_client', function (data) {
             appendMsg(data.value);
         });
         function appendMsg(text) {
-            $('#messages').append('<li>' + text + '</li>');
+            $('#messages').prepend('<li class="list-group-item">' + text + '</li>');
         }
 
-
-        $('button').click(function (e) {
+        $('#sendBtn').click(function (e) {
             var message = $('#message').val();
             $('#message').val('');
-            message = '[' + name + ']: ' + message;
-            // C03. client_to_serverイベント・データを送信する
-            socket.emit('client_to_server', { value: message });
+            if(message != ''){
+              message = '[' + name + ']: ' + message;
+              socket.emit('client_to_server', { value: message });
+            }
         });
 
         function getCookie(name){
@@ -50,7 +61,6 @@
           }
           return '';
         }
-
     </script>
   </body>
 </html>
